@@ -102,3 +102,44 @@ import { UserModel } from "../type/Database/types";
     const moderation = await openai.moderations.create({ input: text });
     return { isSafe: !moderation.results[0].flagged };
   };
+
+
+  export const getPercentage = (
+  lastWeekNewUserCount: any,
+  currentWeekNewUserCount: any
+) => {
+  let percentageChange = 0;
+  if (lastWeekNewUserCount > 0) {
+    percentageChange =
+      ((currentWeekNewUserCount - lastWeekNewUserCount) /
+        lastWeekNewUserCount) *
+      100;
+  } else if (currentWeekNewUserCount > 0) {
+    percentageChange = 100;
+  }
+  return percentageChange;
+};
+
+
+const abuseTracker = new Map<string, { count: number; lastReset: number }>();
+const ABUSE_WINDOW_MS = 60_000; // 1 minute window
+const ABUSE_THRESHOLD = 10; // more than 10 messages per minute = abuse
+
+export function isUserAbusing(userId: string): boolean {
+  const now = Date.now();
+  const record = abuseTracker.get(userId);
+
+  if (!record || now - record.lastReset > ABUSE_WINDOW_MS) {
+    // Reset abuse counter
+    abuseTracker.set(userId, { count: 1, lastReset: now });
+    return false;
+  }
+
+  record.count += 1;
+  abuseTracker.set(userId, record);
+  console.log('========================================================================================================================================================================================================')
+if (record.count > ABUSE_THRESHOLD) {
+    console.log(`User ${userId} flagged as abusive. Applying 10s delay.`);
+  }
+  return record.count > ABUSE_THRESHOLD;
+}

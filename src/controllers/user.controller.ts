@@ -58,6 +58,8 @@ const userLogin = TryCatch(
     const user = await User.findOne({ email, isDeleted: false });
 
     if (!user) return next(new ErrorHandler("User not found", 400));
+    if(!user.isActive) return next(new ErrorHandler("Your account is deactivated", 400));
+
 
     const isPasswordMatched = await user.matchPassword(password);
 

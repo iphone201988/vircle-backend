@@ -21,6 +21,7 @@ export interface UserModel extends Document {
     createdAt: Date;
     updatedAt: Date;
     matchPassword(password: string): Promise<boolean>;
+    isActive: boolean;
 
     //PROFILE FIELDS
     age:number,
@@ -53,6 +54,9 @@ export interface UserModel extends Document {
     contactId: any;
     lastMessage:any;
     hasUnreadMessages: boolean;
+    isDeleted: boolean;
+    createdAt: Date;
+    updatedAt: Date;
   }
 
   export interface ContactModel extends Document {
@@ -70,4 +74,15 @@ export interface UserModel extends Document {
     type: string;
     message: string;
     isRead: boolean;
-  }       
+  }    
+  
+  
+  export interface IReminder extends Document {
+    userId: any;
+    chatId: any;
+    reminderDate: Date;
+    task: string;
+    isSent: boolean;
+    createdAt: Date;
+    updatedAt: Date;
+  }

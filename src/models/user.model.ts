@@ -36,8 +36,7 @@ const userSchema = new mongoose.Schema<UserModel>(
     },
     gender: {
       type: String,
-      enum: [gender.MALE,gender.FEMALE,gender.OTHER],
-      default:gender.OTHER
+      enum: [gender.MALE,gender.FEMALE,gender.OTHER]
     },
     personal_details:{
       type:String,
@@ -47,7 +46,8 @@ const userSchema = new mongoose.Schema<UserModel>(
     },
     notification:{
       type:Boolean
-    }
+    },
+    isActive: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

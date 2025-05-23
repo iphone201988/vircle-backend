@@ -1,32 +1,30 @@
-import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
-// import ErrorHandler from "../utils/ErrorHandler";
 import { TryCatch } from "../utils/helper";
-import User from "../models/user.model";
 import ErrorHandler from "../utils/ErrorHandler";
+import { NextFunction, Request, Response } from "express";
+import User from "../models/user.model";
 
-export const authenticationMiddleware = TryCatch(
+export const adminAuthMiddleware = TryCatch(
   async (req: Request, res: Response, next: NextFunction) => {
     const authHeader = req.headers["authorization"];
     if (!authHeader)
       return next(new ErrorHandler("Please login to access the route", 401));
 
     const token = authHeader.split(" ")[1];
-
     const decode = jwt.verify(token, process.env.JWT_SECRET) as JwtPayload;
-    console.log("====decode", decode);
+
     if (!decode) return next(new ErrorHandler("Invalid token", 401));
 
     const user = await User.findById(decode.userId);
 
-    if (!user) return next(new ErrorHandler("User not found", 401));
+    if (!user) return next(new ErrorHandler("User not found", 400));
 
-    if (decode.jti !== user.jti)
-      return next(new ErrorHandler("Unauthorized", 401));
-
-    await user.save();
-    req.userId = user._id.toString();
-    req.user = user;
+    if ((user.email != process.env.ADMIN_EMAIL))
+      return next(
+        new ErrorHandler("You are not authorized to access the route ", 401)
+      );
+    req.userId = user._id;
+    req.adminUser = user;
     next();
   }
 );

@@ -5,7 +5,7 @@ import router from "./routes/routes";
 import { Server } from "socket.io";
 import morgan from "morgan";
 import { errorMiddleware } from "./middleware/error.middleware";
-import { startMessageScheduler } from "./utils/message.scheduler";
+import {startMessageScheduler} from "./cron/cron";
 import useSocket from "./sockets";
 import path from "path";
 import http from "http";

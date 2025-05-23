@@ -62,7 +62,7 @@ const socialLoginSchema = {
     socialId: stringValidation("Social ID"),
     email: emailValidation(),
     name: stringValidation("Name"),
-    avatar: stringValidation("Avatar"),
+    avatar: stringValidation("Avatar",false),
     socialType: Joi.number()
       .valid(...Object.values(socialTypeEnums))
       .required()

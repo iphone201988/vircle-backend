@@ -11,8 +11,7 @@ const aiContactSchema = {
       "number.max": "Age must be less than or equal to 99",
     }),
     gender: Joi.string()
-      .valid(gender.MALE, gender.FEMALE, gender.OTHER)
-      .default(gender.OTHER),
+      .valid(gender.MALE, gender.FEMALE, gender.OTHER),
     relationship: Joi.string().max(50).trim().optional(),
     expertise: Joi.string().max(50).trim().optional(),
     languagePreference: Joi.string().max(30).trim().optional(),

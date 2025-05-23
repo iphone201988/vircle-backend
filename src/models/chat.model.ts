@@ -19,6 +19,7 @@ const chatSchema = new Schema<ChatModel>(
       default: null,
     },
     hasUnreadMessages: { type: Boolean, default: false },
+    isDeleted: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

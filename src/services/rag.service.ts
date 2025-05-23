@@ -9,7 +9,8 @@ export const fetchRelevantContext = async (
   userId: string,
   contactId: string
 ) => {
-  const queryEmbedding = await getEmbedding(text);
+ try {
+   const queryEmbedding = await getEmbedding(text);
 
   const queryResponse = await index.query({
     vector: queryEmbedding,
@@ -20,6 +21,9 @@ export const fetchRelevantContext = async (
 
   const contextTexts = queryResponse.matches.map((m) => m.metadata.text);
   return contextTexts.join("\n");
+ } catch (error) {
+  console.error("Error fetching context:", error);
+ }
 };
 
 export const storeInVectorDB = async (
@@ -28,7 +32,8 @@ export const storeInVectorDB = async (
     userId: string,
     contactId: string
   ) => {
-    const text = `${message}\n${reply}`;
+   try {
+     const text = `${message}\n${reply}`;
     const embedding = await getEmbedding(text);
   
     await index.upsert([
@@ -38,4 +43,7 @@ export const storeInVectorDB = async (
         metadata: { text, userId, contactId },
       },
     ]);
+   } catch (error) {
+    console.error("Error storing in VectorDB:", error);
+   }
   };
